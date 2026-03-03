@@ -34,7 +34,7 @@ def pickResultsPerDate(date):
 
         if result_link and code in (None, "(IRE)"):
             links.append('https://www.racingpost.com'+result_link)
-
+        # just to see if GUI works
     return links
 
 
