@@ -43,7 +43,11 @@ class BrowserSession(object):
         self.driver.close()
 
     def extractDatePageSource(self):
-        WebDriverWait(self.driver, 15).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.rp-timeView__list')))
-        self.pageSource = self.driver.page_source
-        self.driver.close()
+        try:
+            WebDriverWait(self.driver, 15).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.rp-timeView__list')))
+            self.pageSource = self.driver.page_source
+        except:
+            print(f"{self.url} Don't have races")
+        finally:
+            self.driver.close()
 

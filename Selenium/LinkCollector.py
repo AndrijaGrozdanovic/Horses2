@@ -16,7 +16,11 @@ def pickResultsPerDate(date):
     links = []
 
     # Adjust this selector to the wrapper element that contains both blocks
+
     race_blocks = soup.select("div.rp-timeView__raceInfo.ng-isolate-scope")
+
+    if len(race_blocks) == 0:
+        return
 
     for race in race_blocks:
 
@@ -41,21 +45,27 @@ def pickResultsPerDate(date):
 def getRaceLinks(dateList):
     races = []
     for date in dateList:
-        for race in pickResultsPerDate(date):
-            races.append(race)
+        try:
+            for race in pickResultsPerDate(date):
+                races.append(race)
+        except TypeError:
+            continue
     return races
 
 
 if __name__ == '__main__':
-    # [frameResults(link) for link in getRaceLinks(DataFrame.DateList('2025-06-01', '2025-06-30'))]
+    # [frameResults(link) for link in getRaceLinks(DataFrame.DateList('2025-12-26', '2026-01-31'))]
     # [frameResults(link) for link in getRaceLinks(DataFrame.DateList('2025-07-01', '2025-10-31'))]
-    DateURLs = DataFrame.DateList('2025-01-01', '2025-01-31')
+    DateURLs = DataFrame.DateList('2025-12-24', '2025-12-26')
+    Races = getRaceLinks(DateURLs)
+    print(Races)
+
 
     # link = 'https://www.racingpost.com/results/5/bath/2025-05-23/893863'
     # frameResults(link)
 
-    Races = getRaceLinks(DateURLs)
-    p = Pool(2)
-    p.map(frameResults, Races)
-    p.terminate()
+    # Races = getRaceLinks(DateURLs)
+    # p = Pool(2)
+    # p.map(frameResults, Races)
+    # p.terminate()
 
