@@ -179,7 +179,7 @@ class ResultsPageRuners(Table):
 
             try:
                 self.trainerID = trainer_html.find('a').get('href').split('/')[3]
-            except IndexError:
+            except (IndexError, AttributeError):
                 pass
 
             html = self.getRowItemByCss(5, row)
