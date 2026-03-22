@@ -3,6 +3,13 @@ import pandas as pd
 from Selenium.Parser import Parser
 from Selenium.ResultsPageRunners import ResultsPageRuners
 from Selenium.ResultsPageRaceHeader import ResultsPage
+from Selenium.RaceCardHeader import RaceCardHeader
+from Selenium.RaceCardRunner import RaceCardRunners
+
+import os
+import glob
+import logging
+import shutil
 
 
 def frameResults(url):
@@ -33,9 +40,61 @@ def frameResults(url):
     final_df.to_csv(rf'd:\SeleniumDrop\{filename}.csv', index=False)
 
 
-# if __name__ == '__main__':
-#
-#     resUrl = ['https://www.racingpost.com/results/93/windsor/2025-05-05/892635',
-#               'https://www.racingpost.com/results/1079/kempton-aw/2025-05-05/893022']
-#     for link in resUrl:
-#         frameResults(link)
+def raceCardFrame(url):
+    final_df = pd.DataFrame()
+    Page = Parser(url, 'RaceCard')
+    Header = RaceCardHeader(Page.BS, Page.url)
+    Header.rcSetAll()
+    Runners = RaceCardRunners(Page.BS)
+    for row in Runners.rowList:
+        Runners.setParameters(row)
+    df_runners = pd.DataFrame(Runners.data)
+    df_race = pd.DataFrame([Header.data])
+    df_race_expanded = pd.concat([df_race] * len(df_runners), ignore_index=True)
+    final_df = pd.concat([df_race_expanded, df_runners], axis=1)
+    final_df.to_csv(rf'd:\test.csv', index=False)
+def import_csv_folder(folder_path, con, table_name):
+
+    failed_folder = os.path.join(folder_path, "failed")
+    os.makedirs(failed_folder, exist_ok=True)
+
+    logging.basicConfig(
+        filename="d:/csv_import_errors.log",
+        level=logging.ERROR,
+        format="%(asctime)s - %(message)s"
+    )
+
+    files = glob.glob(os.path.join(folder_path, "*.csv"))
+
+    # print(f"{len(files)} files found")
+
+    for file in files:
+
+        # print(f"Importing {file}")
+
+        try:
+
+            df = pd.read_csv(file)
+            df = df.replace('', None)
+
+            df.to_sql(
+                table_name,
+                con,
+                if_exists="append",
+                index=False,
+                method="multi"
+            )
+
+            # print(f"Imported {len(df)} rows")
+
+        except Exception as e:
+
+            logging.error(f"FAILED FILE: {file}")
+            logging.error(str(e))
+
+            dest = os.path.join(failed_folder, os.path.basename(file))
+            shutil.move(file, dest)
+
+            print(f"Moved to failed: {dest}")
+
+    print("\nImport finished")
