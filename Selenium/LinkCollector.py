@@ -52,7 +52,8 @@ def pickRaceCards(url):
             links.append(selDRV.mainPage + ahtml.get('href'))
         else:
             pass
-    print(links)
+    # print(links)
+    return links
 
 
 def getRaceLinks(dateList):
@@ -67,8 +68,11 @@ def getRaceLinks(dateList):
 
 
 if __name__ == '__main__':
-    pickRaceCards('https://www.racingpost.com/racecards/')
-    # [frameResults(link) for link in getRaceLinks(DataFrame.DateList('2015-11-16', '2015-12-31'))]
+    RaceCards = pickRaceCards('https://www.racingpost.com/racecards/2026-03-29/')
+
+    for raceCard in RaceCards:
+        raceCardFrame(raceCard)
+    #[frameResults(link) for link in getRaceLinks(DataFrame.DateList('2015-12-18', '2015-12-31'))]
     # DateURLs = DataFrame.DateList('2016-03-15', '2016-03-31')
     #
     # # link = 'https://www.racingpost.com/results/5/bath/2025-05-23/893863'
