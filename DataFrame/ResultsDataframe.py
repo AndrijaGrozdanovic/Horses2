@@ -46,13 +46,14 @@ def raceCardFrame(url):
     Header = RaceCardHeader(Page.BS, Page.url)
     Header.rcSetAll()
     Runners = RaceCardRunners(Page.BS)
+    filename = f'{Header.raceDate}_{Header.raceTime.replace(":", "")}_{Header.track}'
     for row in Runners.rowList:
         Runners.setParameters(row)
     df_runners = pd.DataFrame(Runners.data)
     df_race = pd.DataFrame([Header.data])
     df_race_expanded = pd.concat([df_race] * len(df_runners), ignore_index=True)
     final_df = pd.concat([df_race_expanded, df_runners], axis=1)
-    final_df.to_csv(rf'd:\test.csv', index=False)
+    final_df.to_csv(rf'd:\{filename}.csv', index=False)
 def import_csv_folder(folder_path, con, table_name):
 
     failed_folder = os.path.join(folder_path, "failed")
