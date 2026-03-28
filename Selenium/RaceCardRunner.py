@@ -55,7 +55,7 @@ class RaceCardRunners(object):
             self.jockey = jockeyHtml.text.split('\n')[1].strip().replace("'", "")
         except AttributeError:
             pass
-        self.jockeyClaim = row.find('span', class_='RC-runnerInfo__count').text.strip()
+        self.jockeyClaim = row.find('span', {'data-test-selector': 'RC-cardPage-runnerJockey-allowance'}).text.strip()
         try:
             self.jockeyID = jockeyHtml.get('href').split('/')[3]
         except (AttributeError, IndexError):
