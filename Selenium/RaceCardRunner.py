@@ -49,6 +49,13 @@ class RaceCardRunners(object):
             pass
         self.hg = row.find('span', class_='RC-runnerHeadgearCode RC-runnerInfo__name').text.strip()
 
+        try:
+            firstTime = row.find('span', class_='RC-runnerHeadgearFirst RC-runnerInfo__count').text.strip()
+            self.hg += str(firstTime)
+        except AttributeError:
+            pass
+
+
         jockeyHtml = row.find('div', class_='RC-runnerInfo RC-runnerInfo_jockey').find('a')
 
         try:
