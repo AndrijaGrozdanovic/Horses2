@@ -1,5 +1,5 @@
 import pandas as pd
-
+import numpy as np
 from Selenium.Parser import Parser
 from Selenium.ResultsPageRunners import ResultsPageRuners
 from Selenium.ResultsPageRaceHeader import ResultsPage
@@ -12,32 +12,40 @@ import logging
 import shutil
 
 
+def DateList(startDate, endDate):
+    Dates = [str(Date.strftime('%Y-%m-%d')) for Date in
+             pd.date_range(start=f'{startDate}', end=f'{endDate}').to_pydatetime().tolist()]
+    return Dates
+
+
 def frameResults(url):
     final_df = pd.DataFrame()
     browser = Parser(url)
-
     RaceHeader = ResultsPage(browser.BS, browser.url)
     RaceHeader.setAll()
-
     filename = f'{RaceHeader.raceDate}_{RaceHeader.raceTime.replace(":", "")}_{RaceHeader.track}'
-
     obj = ResultsPageRuners(browser.BS)
     obj.setResults()
-
     df_runners = pd.DataFrame(obj.data)
     df_race = pd.DataFrame([RaceHeader.data])
     df_race_expanded = pd.concat([df_race] * len(df_runners), ignore_index=True)
     final_df = pd.concat([df_race_expanded, df_runners], axis=1)
-
+    final_df = final_df.apply(
+        lambda col: col.mask(col.astype(str).str.strip() == "", np.nan)
+    )
     final_df['oddDif'] = final_df['SP'] - final_df['SP'].min()
     final_df = final_df.reset_index(drop=True)
     final_df["runnerID"] = (final_df["raceID"].astype(str) + final_df.index.astype(str).str.zfill(2))
     final_df['winningDistance'] = pd.to_numeric(final_df['winningDistance'], errors='coerce')
-    final_df['winningDistance'] = final_df['possition'].apply(
-        lambda x: float(final_df['winningDistance'].min()) if (x == 1) else None)
-    final_df = final_df.infer_objects(copy=False)
+    final_df['winningDistance'] = final_df['possition'].apply(lambda x: float(final_df['winningDistance'].min()) if (x == 1) else None)
 
-    final_df.to_csv(rf'd:\SeleniumDrop\{filename}.csv', index=False)
+    for col in final_df.columns:
+        try:
+            final_df[col] = pd.to_numeric(final_df[col])
+        except (ValueError, TypeError):
+            pass
+
+    return final_df
 
 
 def raceCardFrame(url):
@@ -46,16 +54,17 @@ def raceCardFrame(url):
     Header = RaceCardHeader(Page.BS, Page.url)
     Header.rcSetAll()
     Runners = RaceCardRunners(Page.BS)
-    filename = f'{Header.raceDate}_{Header.raceTime.replace(":", "")}_{Header.track}'
+    # filename = f'{Header.raceDate}_{Header.raceTime.replace(":", "")}_{Header.track}'
     for row in Runners.rowList:
         Runners.setParameters(row)
     df_runners = pd.DataFrame(Runners.data)
     df_race = pd.DataFrame([Header.data])
     df_race_expanded = pd.concat([df_race] * len(df_runners), ignore_index=True)
     final_df = pd.concat([df_race_expanded, df_runners], axis=1)
-    final_df.to_csv(rf'd:\{filename}.csv', index=False)
-def import_csv_folder(folder_path, con, table_name):
+    return final_df
 
+
+def import_csv_folder(folder_path, con, table_name):
     failed_folder = os.path.join(folder_path, "failed")
     os.makedirs(failed_folder, exist_ok=True)
 
