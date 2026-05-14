@@ -1,0 +1,15 @@
+{
+    "HG": ["b", "b1", "bp", "bp1", "e", "e/s", "e/s1", "e/sp", "e/sp1", "e1", "eb", "eb1", "et", "et1", "etb", "etb1", "etp1", "ev1", "h", "h1", "hb", "hb1", "hc1", "hct1", "he", "he1", "heb", "heb1", "hep", "hep1", "het", "het1", "hetb", "hetb1", "hev", "hp", "hp1", "ht", "ht1", "htb", "htb1", "htp", "htp1", "htv", "htv1", "hv", "hv1", "p", "p1", "t", "t1", "tb", "tb1", "tbp", "tp", "tp1", "tv", "tv1", "tvp", "v", "v1", "vp", "vp1"],
+    "overall_flag": ["=0", "=1"],
+    "draw": ["=1", "<=2"],
+    "Rating_Track": ["<50", ">=50"],
+    "Proj_PRB2_Track_Overall": ["<50", ">=50"],
+    "Rank_Track": ["=1", "<=2", "<=3"],
+    "hg_ftc": ["=0", "=1"],
+    "HG_return": ["=0", "=1"],
+    "hg_minor": ["=0", "=1"],
+    "hg_prb2": ["<50", ">=50"],
+    "yards": ["<=2000", ">2000"],
+    "Rank_Class_1": ["=1", "<=3", ">3"],
+    "Rank_Class_2": ["=1", "<=3", ">3"]
+}
