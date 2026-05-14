@@ -1,0 +1,17 @@
+{
+    "Track": ["Ascot", "Ayr", "Ballinrobe (IRE)", "Bath", "Bellewstown (IRE)", "Beverley", "Brighton", "Carlisle", "Catterick", "Chepstow", "Chester", "Clonmel (IRE)", "Cork (IRE)", "Curragh (IRE)", "Doncaster", "Down Royal (IRE)", "Epsom", "Fairyhouse (IRE)", "Ffos Las", "Galway (IRE)", "Goodwood", "Gowran Park (IRE)", "Hamilton", "Haydock", "Killarney (IRE)", "Laytown (IRE)", "Leicester", "Leopardstown (IRE)", "Limerick (IRE)", "Lingfield", "Listowel (IRE)", "Musselburgh", "Naas (IRE)", "Navan (IRE)", "Newbury", "Newcastle", "Newmarket", "Newmarket (July)", "Nottingham", "Pontefract", "Punchestown (IRE)", "Redcar", "Ripon", "Roscommon (IRE)", "Salisbury", "Sandown", "Sligo (IRE)", "Thirsk", "Thurles (IRE)", "Tipperary (IRE)", "Tramore (IRE)", "Wetherby", "Wexford (IRE)", "Windsor", "Yarmouth", "York"],
+    "overall_flag": ["=0", "=1"],
+    "class_flag": ["=0", "=1"],
+    "jockey_flag": ["=0", "=1"],
+    "Rating_Track": ["<50", ">=50"],
+    "Proj_PRB2_Track_Overall": ["<50", ">=50"],
+    "Rank_Track": ["=1", "<=2", "<=3"],
+
+    "track_ftc": ["=0", "=1"],
+    "track_minor": ["=0", "=1"],
+    "FTC_PRB_Track": ["<50", ">=50"],
+
+    "Rank_Class_1": ["=1", "<=3", ">3"],
+    "Rank_Class_2": ["=1", "<=3", ">3"],
+
+}
