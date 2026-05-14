@@ -2,7 +2,8 @@ from collections import defaultdict
 from JsonReader.JsonReader import JsonReader
 
 
-
+jsonFile = JsonReader("OverallFilter.json")
+filters = jsonFile.data
 
 conditions = [(col, cond) for col, conds in filters.items() for cond in conds]
 condition_to_bit = {cond: i for i, cond in enumerate(conditions)}
@@ -32,13 +33,30 @@ def build_mask_sql():
     return parts
 
 
+def create_Turf_2026_masked(masks):
+
+    query_parts = []
+
+    query_parts.append("DROP TABLE IF EXISTS Turf_2026_masked;\n")
+    query_parts.append("SELECT *,")
+
+    for i in sorted(masks.keys()):
+        if i > 2:
+            break
+
+        mask_expr = "(\n  " + "\n+ ".join(masks[i]) + f"\n) AS mask{i},"
+        query_parts.append(mask_expr)
+
+    query_parts.append("INTO Turf_2026_masked")
+    query_parts.append("FROM Turf_2026;")
+
+    query = "\n".join(query_parts)
+    return query
+
+
 mask_parts = build_mask_sql()
 
-print("SELECT *,")
-for i in sorted(mask_parts.keys()):
-    if i > 2:
-        break   # ✅ only mask1 + mask2
-    print("(\n  " + "\n+ ".join(mask_parts[i]) + f"\n) AS mask{i},")
 
-print("INTO Turf_2026_masked")
-print("FROM Turf_2026;")
+query_for_injection = create_Turf_2026_masked(mask_parts)
+
+print(query_for_injection)

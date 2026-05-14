@@ -25,17 +25,9 @@ class BrowserSession(object):
     def __init__(self, url):
         self.driverPath = self.obj.driver
         self.url = url
-        # self.mainPage = self.obj.mainPage
         service = Service(executable_path=self.driverPath)
         self.pageSource = ''
         options = Options()
-
-        # options.add_argument("--start-minimized")
-        # options.add_argument("--window-position=-2000,-2000")
-        # options.add_argument("--disable-backgrounding-occluded-windows")
-        # options.add_argument("--window-size=1920,1080")
-        # options.add_argument("--no-sandbox")
-        # options.add_argument("--disable-dev-shm-usage")
         options.add_argument('--ignore-certificate-errors')
         options.add_argument('--ignore-ssl-errors')
         options.add_argument('--allow-insecure-localhost')
@@ -110,3 +102,46 @@ class BrowserSession(object):
         finally:
             self.driver.close()
 
+    def BHAupdate(self):
+
+        WebDriverWait(self.driver, 10).until(
+            EC.frame_to_be_available_and_switch_to_it(
+                (By.TAG_NAME, "iframe")
+            )
+        )
+
+        try:
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.caret"))).click()
+        except Exception as e:
+            print(e)
+            pass
+
+        try:
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#wrapper > header > div > nav > ul > li.dropdown.open > ul > li:nth-child(3)'))).click()
+        except:
+            pass
+        try:
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#wrapper > header > div > nav > ul > li.dropdown.open > ul > li:nth-child(4)'))).click()
+        except:
+            pass
+        try:
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#wrapper > header > div > nav > ul > li.dropdown.open > ul > li:nth-child(5)'))).click()
+        except:
+            pass
+
+        try:
+            WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.caret"))).click()
+        except Exception as e:
+            print(e)
+            pass
+        self.pageSource = self.driver.page_source
+        self.driver.close()
+
+    def RPNonRunners(self):
+        try:
+            WebDriverWait(self.driver, 15).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.RC-meetingDay')))
+            self.pageSource = self.driver.page_source
+            self.driver.close()
+
+        except:
+           pass

@@ -1,10 +1,9 @@
 import re
-from Parser import Parser
+from Selenium.Parser import Parser
 from multiprocessing import Pool
-from ResultsPageRaceHeader import ResultsPage
-from ResultsPageRunners import ResultsPageRuners
-from DataFrame import DataFrame
-from DataFrame.ResultsDataframe import frameResults, raceCardFrame
+
+
+from DataFrame.ResultsDataframe import frameResults, raceCardFrame, DateList
 import time
 
 
@@ -69,11 +68,11 @@ def getRaceLinks(dateList):
 
 
 if __name__ == '__main__':
-    RaceCards = pickRaceCards('https://www.racingpost.com/racecards/2026-04-04/')
-    print(RaceCards)
+    # RaceCards = pickRaceCards('https://www.racingpost.com/racecards/2026-04-04/')
+    #
     # for raceCard in RaceCards:
     #     raceCardFrame(raceCard)
-    #[frameResults(link) for link in getRaceLinks(DataFrame.DateList('2015-12-18', '2015-12-31'))]
+    [frameResults(link) for link in getRaceLinks(DateList('2026-04-01', '2026-04-05'))]
     # DateURLs = DataFrame.DateList('2016-03-15', '2016-03-31')
     #
     # # link = 'https://www.racingpost.com/results/5/bath/2025-05-23/893863'

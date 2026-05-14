@@ -18,6 +18,29 @@ def DateList(startDate, endDate):
     return Dates
 
 
+def add_median_or_excluding_runner(df):
+
+    def calc(group):
+        ors = group['OR'].astype(float)
+
+        medians = []
+
+        for idx in range(len(group)):
+            others = ors.drop(ors.index[idx])
+
+            if len(others) == 0:
+                medians.append(np.nan)
+            else:
+                medians.append(others.median())
+
+        group = group.copy()
+        group['Race_Card_Median_OR'] = medians
+
+        return group
+
+    return df.groupby('raceTime', group_keys=False).apply(calc)
+
+
 def frameResults(url):
     final_df = pd.DataFrame()
     browser = Parser(url)
@@ -49,18 +72,18 @@ def frameResults(url):
 
 
 def raceCardFrame(url):
-    final_df = pd.DataFrame()
+
     Page = Parser(url, 'RaceCard')
     Header = RaceCardHeader(Page.BS, Page.url)
     Header.rcSetAll()
     Runners = RaceCardRunners(Page.BS)
-    # filename = f'{Header.raceDate}_{Header.raceTime.replace(":", "")}_{Header.track}'
     for row in Runners.rowList:
         Runners.setParameters(row)
     df_runners = pd.DataFrame(Runners.data)
     df_race = pd.DataFrame([Header.data])
     df_race_expanded = pd.concat([df_race] * len(df_runners), ignore_index=True)
     final_df = pd.concat([df_race_expanded, df_runners], axis=1)
+    final_df = add_median_or_excluding_runner(final_df)
     return final_df
 
 

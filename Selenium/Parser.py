@@ -13,6 +13,10 @@ class Parser(object):
             obj.extractRaceCardPageSource()
         elif res == 'RaceCardDate':
             obj.RCDate()
+        elif res == 'BHA':
+            obj.BHAupdate()
+        elif res == 'RPNR':
+            obj.RPNonRunners()
         self.mainPage = obj.obj.mainPage
         self.BS = BeautifulSoup(obj.pageSource, "lxml")
         self.url = url

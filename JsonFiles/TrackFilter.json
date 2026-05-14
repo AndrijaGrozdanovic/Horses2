@@ -3,15 +3,17 @@
     "overall_flag": ["=0", "=1"],
     "class_flag": ["=0", "=1"],
     "jockey_flag": ["=0", "=1"],
+    "draw": ["=1", "<=2"],
     "Rating_Track": ["<50", ">=50"],
     "Proj_PRB2_Track_Overall": ["<50", ">=50"],
     "Rank_Track": ["=1", "<=2", "<=3"],
 
     "track_ftc": ["=0", "=1"],
     "track_minor": ["=0", "=1"],
+    "yards": ["<=2000", ">2000"],
     "FTC_PRB_Track": ["<50", ">=50"],
 
     "Rank_Class_1": ["=1", "<=3", ">3"],
-    "Rank_Class_2": ["=1", "<=3", ">3"],
+    "Rank_Class_2": ["=1", "<=3", ">3"]
 
 }
