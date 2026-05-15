@@ -1,8 +1,5 @@
 from config.parameters import Parameters
 from sqlalchemy import create_engine, text
-from DataFrame.ResultsDataframe import import_csv_folder
-import logging
-import pandas as pd
 
 
 class DbConnection(object):
@@ -35,13 +32,3 @@ class DbConnection(object):
     @classmethod
     def importToTable(cls, tableName, connection, df):
         df.to_sql(tableName, con=connection, if_exists="append", index=False)
-
-
-if __name__ == '__main__':
-    obj = DbConnection('mssql')
-    obj.createConnection("AUTOCOMMIT")
-    con = obj.connection
-    # df = pd.read_csv(r'd:\failed.csv')
-    # df.to_sql('testTable', con, if_exists="append", index=False)
-
-    import_csv_folder(r'd:\SeleniumDrop\\', con, 'racing_post_results')

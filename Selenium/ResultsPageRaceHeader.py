@@ -1,9 +1,4 @@
 import re
-
-# from browserSession import BrowserSession
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 import logging
 
 
@@ -108,9 +103,7 @@ class ResultsPage(object):
 
     def getPrizeMoney(self):
         try:
-            self.prize = \
-            self.html.find('span', class_='rp-raceTimeCourseName__info_container').text.split('1st')[1].split('2nd')[
-                0].strip().replace('£', '').replace('€', '').replace(',', '')
+            self.prize = self.html.find('span', class_='rp-raceTimeCourseName__info_container').text.split('1st')[1].split('2nd')[0].strip().replace('£', '').replace('€', '').replace(',', '')
         except:
             pass
         try:
@@ -121,10 +114,7 @@ class ResultsPage(object):
 
     def getORAndAgeLimitations(self):
         try:
-            Race_info_limit = self.html.find('span',
-                                             class_='rp-raceTimeCourseName_ratingBandAndAgesAllowed').text.replace('(',
-                                                                                                                   '').replace(
-                ')', '').strip()
+            Race_info_limit = self.html.find('span', class_='rp-raceTimeCourseName_ratingBandAndAgesAllowed').text.replace('(', '').replace(')', '').strip()
         except AttributeError:
             Race_info_limit = ''
         try:
@@ -171,12 +161,7 @@ class ResultsPage(object):
 
     def getWinningTimeSlowBy(self):
         try:
-
-            raceInfo = \
-            re.findall(r'\(([^()]+)\)', self.htmlRaceInfo.select_one('ul > li:nth-child(1) > span:nth-child(3)').text)[
-                0]
-
-            # number = re.findall(r'\((\d+(\.\d+)?)|(\.\d+)', raceInfo)[0]
+            raceInfo = re.findall(r'\(([^()]+)\)', self.htmlRaceInfo.select_one('ul > li:nth-child(1) > span:nth-child(3)').text)[0]
             number = re.findall(r'-?\d*\.\d+|\d+', raceInfo)[0]
 
             if 'slow' in raceInfo:

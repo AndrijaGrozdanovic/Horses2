@@ -14,8 +14,3 @@ class JsonReader(object):
         if self.data is None:
             with open(self.file_path, "r", encoding="utf-8") as f:
                 self.data = json.load(f)
-
-
-#reader = JsonReader("OverallFilter.json")
-
-#print(reader.data)

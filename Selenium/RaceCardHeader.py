@@ -127,6 +127,4 @@ class RaceCardHeader(object):
         self.data.pop('raceInfo', None)
         self.data.pop('raceKeyInfo', None)
 
-        # print(self.data)
-
 

@@ -134,9 +134,6 @@ class ResultsPageRuners(Table):
             except AttributeError:
                 pass
 
-
-
-
             # SP
             SP_raw = row.find('span', class_='rp-horseTable__horse__price').text.strip()
             try:
@@ -191,14 +188,10 @@ class ResultsPageRuners(Table):
 
             self.HG = self.fetchElementIfExsists(html, 'span', 'rp-horseTable__headGear')
             self.WS = self.fetchElementIfExsists(html, 'span', 'rp-horseTable__windOperations')
-            # self.outOfHandicap = self.extraDataHandling('Out-of-Handicaps', html.select_one('span.rp-horseTable__extraData'))
-            # self.extraWeight = self.extraDataHandling('Extra-Weights', html.select_one('span.rp-horseTable__extraData'))
-
             self.age = self.getRowItemByCss(4, row).text.strip()
             try:
                 self.OR = int(self.getRowItemByCss(6, row).text.strip())
-            except ValueError as e:
-                # print(f'Error : {e}')
+            except ValueError:
                 self.OR = ''
 
             self.comment = self.commentRows[index].text.strip()

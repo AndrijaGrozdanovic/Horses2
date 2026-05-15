@@ -3,7 +3,6 @@ import re
 
 class RaceCardRunners(object):
 
-
     def __init__(self, BSimport):
         self.rowList = BSimport.find_all('div', class_='RC-runnerRow js-RC-runnerRow js-PC-runnerRow')
         self.horseName = ""
@@ -55,7 +54,6 @@ class RaceCardRunners(object):
         except AttributeError:
             pass
 
-
         jockeyHtml = row.find('div', class_='RC-runnerInfo RC-runnerInfo_jockey').find('a')
 
         try:
@@ -76,14 +74,13 @@ class RaceCardRunners(object):
         except (AttributeError, IndexError):
             pass
 
-
         try:
             self.OR = int(row.find('span', class_='RC-runnerOr').text.strip())
         except ValueError:
             pass
 
         ownerHTML = row.find('div', class_='RC-runnerInfo RC-runnerInfo_owner').find('a')
-        # print(ownerHTML.get('href').split('/'))
+
         try:
             self.owner = ownerHTML.get('href').split('/')[4]
         except (AttributeError, IndexError):
@@ -102,7 +99,4 @@ class RaceCardRunners(object):
         current_data.pop('formUrl', None)
         current_data.pop('data', None)
         self.data.append(current_data)
-
-
-
 

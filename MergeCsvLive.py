@@ -8,7 +8,7 @@ from openpyxl.styles import Border, Side
 
 
 # TakeDate = LinkCollector.setRCstartURL().split('/')[4]
-path = rf'd:\Konji\Sistemi_2025_evidencija\2026-14-05.xlsx'
+path = rf'd:\Konji\Sistemi_2025_evidencija\2026-15-05.xlsx'
 
 
 def mergeExcel():

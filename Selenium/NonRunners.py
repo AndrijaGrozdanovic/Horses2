@@ -36,11 +36,3 @@ def RPNonRunners():
     else:
         query = 'select * from Race_Card_turf_handicap where 1=2'
     return query
-
-
-if __name__ == '__main__':
-
-    print(BHANonRunners())
-    print(RPNonRunners())
-
-

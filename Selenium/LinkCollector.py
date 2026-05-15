@@ -1,10 +1,5 @@
 import re
 from Selenium.Parser import Parser
-from multiprocessing import Pool
-
-
-from DataFrame.ResultsDataframe import frameResults, raceCardFrame, DateList
-import time
 
 
 def pickResultsPerDate(date):
@@ -65,25 +60,3 @@ def getRaceLinks(dateList):
         except TypeError:
             continue
     return races
-
-
-if __name__ == '__main__':
-    # RaceCards = pickRaceCards('https://www.racingpost.com/racecards/2026-04-04/')
-    #
-    # for raceCard in RaceCards:
-    #     raceCardFrame(raceCard)
-    [frameResults(link) for link in getRaceLinks(DateList('2026-04-01', '2026-04-05'))]
-    # DateURLs = DataFrame.DateList('2016-03-15', '2016-03-31')
-    #
-    # # link = 'https://www.racingpost.com/results/5/bath/2025-05-23/893863'
-    # # frameResults(link)
-    #
-    # DateURLs = ['2020-09-12']
-    # Races = getRaceLinks(DateURLs)
-    #
-    # for race in Races:
-    #     frameResults(race)
-
-    # p = Pool(10)
-    # p.map(frameResults, Races)
-    # p.terminate()
