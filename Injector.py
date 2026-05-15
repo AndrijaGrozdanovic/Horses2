@@ -1,26 +1,17 @@
 from DataFrame.ResultsDataframe import raceCardFrame, frameResults, DateList
 from database.DBConnection import DbConnection
 from Selenium.LinkCollector import *
+from SystemReaderLive import takeRaceCardDate
 import datetime
-import time
-
-
-def takeRaceCardDate():
-    if int(time.strftime("%H", time.localtime())) > 17:
-        Current_Date = datetime.date.today() + datetime.timedelta(days=1)
-    else:
-        Current_Date = datetime.date.today()
-    return Current_Date
-
 
 if __name__ == '__main__':
     obj = DbConnection('mssql')
     obj.createConnection("AUTOCOMMIT")
     con = obj.connection
 
-    cursor = obj.executeQuery('select max(raceDate) from racing_post_results')
+    maxDate = obj.executeQuery('select max(raceDate) from racing_post_results')
 
-    resultStartDate = cursor.fetchone()[0] + datetime.timedelta(days=1)
+    resultStartDate = maxDate.fetchone()[0] + datetime.timedelta(days=1)
     RaceCardDate = takeRaceCardDate()
     resultEndDate = RaceCardDate + datetime.timedelta(days=-1)
 
