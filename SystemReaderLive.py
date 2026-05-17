@@ -130,7 +130,7 @@ if __name__ == '__main__':
     conObj.createConnection("AUTOCOMMIT")
     con = conObj.connection
     conObj.executeQuery(BHANonRunners())
-    conObj.executeQuery(RPNonRunners())
+    conObj.executeQuery(RPNonRunners(tomorrow))
     conObj.executeQuery('exec Populate_Overall_MinOR_FTC')
     conObj.executeQuery('exec Populate_OR_Class_L5')
     conObj.executeQuery('exec PRB2_Procedure')
