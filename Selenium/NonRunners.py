@@ -24,6 +24,7 @@ def BHANonRunners():
 def RPNonRunners(raceDate):
     RC = Parser(f'https://www.racingpost.com/racecards/{raceDate}', 'RaceCardDate')
     meetings = [f'https://www.racingpost.com{a.get('href')}' for a in RC.BS.find_all('a', class_='RC-meetingList__showAll ui-link ui-link_table')]
+
     horse_names = []
     for meeting in meetings:
         trackID = int(meeting.split('/')[4])
@@ -32,4 +33,4 @@ def RPNonRunners(raceDate):
             non_runners = MeetBS.BS.select('span.RC-runnerNumber__no_nonRunner[data-test-selector="RC-cardPage-runnerNumber-no"]')
             NRs = [el.get("data-horsename").replace("'", "") for el in non_runners]
             horse_names.extend(NRs)
-        return build_non_runner_query(horse_names)
+    return build_non_runner_query(horse_names)
