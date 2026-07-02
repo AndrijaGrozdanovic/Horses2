@@ -127,7 +127,6 @@ def checkForParameters(value, column):
 
 
 if __name__ == '__main__':
-    start_time = time.time()
     days = takeRaceCardDate()
     tomorrow = days[0]
     conObj = DbConnection('mssql')
@@ -140,10 +139,9 @@ if __name__ == '__main__':
     conObj.executeQuery('exec MedianOR_Prep_procedure')
     conObj.executeQuery('exec CD_Calculations_Procedure')
     conObj.executeQuery('exec Race_Card_enrich')
-
     conObj.executeQuery('delete from system_evidence')
 
-    System_file = pd.read_excel('Sistemi_sablon_radni.xlsx').fillna(0)
+    System_file = pd.read_excel('Sistemi_sablon.xlsx').fillna(0)
 
     for ind in System_file.index:
         where_clause = 'where 1=1 '
@@ -168,5 +166,3 @@ if __name__ == '__main__':
 
     dfr.to_excel(path, index=False)
     formatFinalReport(path)
-
-    print("--- %s seconds ---" % (time.time() - start_time))

@@ -3,6 +3,7 @@ import pandas as pd
 import sys
 import time
 import re
+import json
 import openpyxl
 from database.DBConnection import DbConnection
 
@@ -72,24 +73,90 @@ if __name__ == '__main__':
     conObj = DbConnection('mssql')
     conObj.createConnection("AUTOCOMMIT")
     con = conObj.connection
+    #
+    System_file = pd.read_excel('Sistemi_sablon.xlsx').fillna(0)
 
-    System_file = pd.read_excel('Sistemi_sablon_radni.xlsx').fillna(0)
     for ind in System_file.index:
+
         where_clause = 'where 1=1 '
+
         for column in System_file.columns:
-            if column == 'System' or column == 'Kvota':
+
+            if column in ['System', 'Kvota']:
                 continue
+
             if System_file[column][ind]:
                 where_clause += f'and {checkForParameters(System_file[column][ind], column)} '
 
-        sql = f"select distinct Track,HorseName,RaceDate,SP,Trainer,profit_SP,'{System_file['System'][ind]}', Jockey, dtw, winningDistance from Turf_2026 "+where_clause + "Order by RaceDate"
+        sql = f"""
+        select distinct
+            Track,
+            HorseName,
+            RaceDate,
+            SP,
+            Trainer,
+            profit_SP,
+            '{System_file["System"][ind]}' as systemName,
+            Jockey,
+            dtw,
+            winningDistance
+        from Turf_2026
+        {where_clause}
+        Order by RaceDate
+        """
 
         try:
             result = pd.read_sql(sql=sql, con=con)
+
+            result.to_csv(
+                rf"d:\Konji\Exporti_Turf_2026\{System_file['System'][ind]}.csv",
+                index=False
+            )
+
         except Exception as e:
             print(f'Error in: {sql}')
             print(e)
 
+    # -------------------------
+    # JSON SYSTEMS
+    # -------------------------
 
-        result.to_csv(rf"d:\Konji\Exporti_Turf_2026\{System_file['System'][ind]}.csv", index=False)
+    with open('2026Systems.json', 'r', encoding='utf-8') as f:
+        json_systems = json.load(f)
+
+    for system_name, condition in json_systems.items():
+
+        sql = f"""
+        select distinct
+            Track,
+            HorseName,
+            RaceDate,
+            SP,
+            Trainer,
+            profit_SP,
+            '{system_name}' as systemName,
+            Jockey,
+            dtw,
+            winningDistance,
+            
+            favourite
+        from Turf_2026
+        where {condition}
+          
+        Order by RaceDate
+        """
+
+        try:
+
+            result = pd.read_sql(sql=sql, con=con)
+
+            result.to_csv(
+                rf"d:\Konji\Exporti_Turf_2026\{system_name}.csv",
+                index=False
+            )
+
+        except Exception as e:
+
+            print(f'Error in: {sql}')
+            print(e)
 

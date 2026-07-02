@@ -21,7 +21,7 @@ def DateList(startDate, endDate):
 def add_median_or_excluding_runner(df):
 
     def calc(group):
-        ors = group['OR'].astype(float)
+        ors = pd.to_numeric(group['OR'], errors='coerce')
 
         medians = []
 
