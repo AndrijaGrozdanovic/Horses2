@@ -34,10 +34,6 @@ def formatFinalReport(path_to_file):
     wb.save(path_to_file)
 
 
-def run_script(script):
-    subprocess.run([r'..\MainEnv\Scripts\python.exe', script])
-
-
 def autofit_column_width(ws):
     for col in ws.columns:
         max_length = 0
@@ -126,6 +122,34 @@ def checkForParameters(value, column):
     return string
 
 
+def executeSystemsInProduction(day, connection):
+    file = pd.read_excel('Sistemi_sablon.xlsx').fillna(0)
+    for i in file.index:
+        where_clause = 'where 1=1 '
+        additional = ''
+        for column in file.columns:
+            if column == 'System' or column == 'Kvota':
+                continue
+            if file[column][i]:
+                where_clause += f'and {checkForParameters(file[column][i], column)} '
+                additional += f'  {checkAdditionalCondition(file[column][i], column)}'
+
+        sql = f"select distinct raceDate,Track,horseNameRaw,RaceTime,'{file['System'][i]}' as systemName from Turf_2026_systems "+where_clause
+        try:
+            result = pd.read_sql(sql=sql, con=connection)
+            result.insert(loc=4, column='Condition', value=additional.strip())
+            DbConnection.importToTable('system_evidence', connection, result)
+        except Exception as e:
+            print(f'Error in: {sql}')
+            print(e)
+
+    dfr = pd.read_sql('select Track, horseNameRaw, RaceTime, systemName, Condition from system_evidence order by raceTime, horseNameRaw', con=con)
+    path = rf'd:\Konji\Sistemi_2025_evidencija\{day}.xlsx'
+
+    dfr.to_excel(path, index=False)
+    formatFinalReport(path)
+
+
 if __name__ == '__main__':
     days = takeRaceCardDate()
     tomorrow = days[0]
@@ -140,29 +164,4 @@ if __name__ == '__main__':
     conObj.executeQuery('exec CD_Calculations_Procedure')
     conObj.executeQuery('exec Race_Card_enrich')
     conObj.executeQuery('delete from system_evidence')
-
-    System_file = pd.read_excel('Sistemi_sablon.xlsx').fillna(0)
-
-    for ind in System_file.index:
-        where_clause = 'where 1=1 '
-        additional = ''
-        for column in System_file.columns:
-            if column == 'System' or column == 'Kvota':
-                continue
-            if System_file[column][ind]:
-                where_clause += f'and {checkForParameters(System_file[column][ind], column)} '
-                additional += f'  {checkAdditionalCondition(System_file[column][ind], column)}'
-
-        sql = f"select distinct raceDate,Track,horseNameRaw,RaceTime,'{System_file['System'][ind]}' as systemName from Turf_2026_systems "+where_clause
-        try:
-            result = pd.read_sql(sql=sql, con=con)
-            result.insert(loc=4, column='Condition', value=additional.strip())
-            DbConnection.importToTable('system_evidence', con, result)
-        except Exception as e:
-            print(e)
-
-    dfr = pd.read_sql('select Track, horseNameRaw, RaceTime, systemName, Condition from system_evidence order by raceTime, horseNameRaw', con=con)
-    path = rf'd:\Konji\Sistemi_2025_evidencija\{tomorrow}.xlsx'
-
-    dfr.to_excel(path, index=False)
-    formatFinalReport(path)
+    executeSystemsInProduction(tomorrow, con)

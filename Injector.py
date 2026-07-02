@@ -2,7 +2,7 @@ from DataFrame.ResultsDataframe import frameResults, DateList
 from database.DBConnection import DbConnection
 from Selenium.LinkCollector import *
 from Selenium.NonRunners import *
-from SystemReaderLive import takeRaceCardDate
+from SystemReaderLive import takeRaceCardDate, executeSystemsInProduction
 from rapidapi_racingAPI import get_turf_handicap_racecards
 import datetime
 
@@ -32,3 +32,4 @@ if __name__ == '__main__':
     obj.executeQuery('exec CD_Calculations_Procedure')
     obj.executeQuery('exec Race_Card_enrich_new')
     obj.executeQuery('delete from system_evidence')
+    executeSystemsInProduction(days[0], con)

@@ -1,14 +1,10 @@
 import datetime
 import pandas as pd
-import sys
+import os
+import glob
 import time
 import re
-import json
-import openpyxl
 from database.DBConnection import DbConnection
-
-
-
 
 
 def takeRaceCardDate():
@@ -19,9 +15,17 @@ def takeRaceCardDate():
     return Current_Date
 
 
+def mergeExcel():
+
+    os.chdir(rf'd:\Konji\Exporti_Turf_2026\\')
+    extension = 'csv'
+    all_filenames = [i for i in glob.glob('*.{}'.format(extension))]
+    combined_csv = pd.concat([pd.read_csv(f) for f in all_filenames])
+    # sortedExcel = combined_csv.sort_values(by=['raceDate', 'raceTime', 'runnerID'])
+    combined_csv.to_csv('d:\\Statistika2026.csv', index=False)
+
 
 def checkForParameters(value, column):
-
     string = column + f" = '{value}'"
     try:
         string = column + '=' + str(float(value))
@@ -69,25 +73,17 @@ def checkForParameters(value, column):
 
 
 if __name__ == '__main__':
-    tomorrow = takeRaceCardDate()
     conObj = DbConnection('mssql')
     conObj.createConnection("AUTOCOMMIT")
     con = conObj.connection
-    #
     System_file = pd.read_excel('Sistemi_sablon.xlsx').fillna(0)
-
     for ind in System_file.index:
-
         where_clause = 'where 1=1 '
-
         for column in System_file.columns:
-
             if column in ['System', 'Kvota']:
                 continue
-
             if System_file[column][ind]:
                 where_clause += f'and {checkForParameters(System_file[column][ind], column)} '
-
         sql = f"""
         select distinct
             Track,
@@ -104,59 +100,13 @@ if __name__ == '__main__':
         {where_clause}
         Order by RaceDate
         """
-
         try:
             result = pd.read_sql(sql=sql, con=con)
-
             result.to_csv(
                 rf"d:\Konji\Exporti_Turf_2026\{System_file['System'][ind]}.csv",
                 index=False
             )
-
         except Exception as e:
             print(f'Error in: {sql}')
             print(e)
-
-    # -------------------------
-    # JSON SYSTEMS
-    # -------------------------
-
-    with open('2026Systems.json', 'r', encoding='utf-8') as f:
-        json_systems = json.load(f)
-
-    for system_name, condition in json_systems.items():
-
-        sql = f"""
-        select distinct
-            Track,
-            HorseName,
-            RaceDate,
-            SP,
-            Trainer,
-            profit_SP,
-            '{system_name}' as systemName,
-            Jockey,
-            dtw,
-            winningDistance,
-            
-            favourite
-        from Turf_2026
-        where {condition}
-          
-        Order by RaceDate
-        """
-
-        try:
-
-            result = pd.read_sql(sql=sql, con=con)
-
-            result.to_csv(
-                rf"d:\Konji\Exporti_Turf_2026\{system_name}.csv",
-                index=False
-            )
-
-        except Exception as e:
-
-            print(f'Error in: {sql}')
-            print(e)
-
+    mergeExcel()
