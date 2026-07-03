@@ -50,7 +50,7 @@ def autofit_column_width(ws):
 
 def takeRaceCardDate():
     string = ''
-    if int(time.strftime("%H", time.localtime())) > 17:
+    if int(time.strftime("%H", time.localtime())) > 20:
         Current_Date = datetime.date.today() + datetime.timedelta(days=1)
         string = 'tomorrow'
     else:
@@ -143,7 +143,7 @@ def executeSystemsInProduction(day, connection):
             print(f'Error in: {sql}')
             print(e)
 
-    dfr = pd.read_sql('select Track, horseNameRaw, RaceTime, systemName, Condition from system_evidence order by raceTime, horseNameRaw', con=con)
+    dfr = pd.read_sql('select Track, horseNameRaw, RaceTime, systemName, Condition from system_evidence order by raceTime, horseNameRaw', con=connection)
     path = rf'd:\Konji\Sistemi_2025_evidencija\{day}.xlsx'
 
     dfr.to_excel(path, index=False)
