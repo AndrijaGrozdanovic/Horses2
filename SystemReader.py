@@ -21,8 +21,8 @@ def mergeExcel():
     extension = 'csv'
     all_filenames = [i for i in glob.glob('*.{}'.format(extension))]
     combined_csv = pd.concat([pd.read_csv(f) for f in all_filenames])
-    # sortedExcel = combined_csv.sort_values(by=['raceDate', 'raceTime', 'runnerID'])
-    combined_csv.to_csv('d:\\Statistika2026.csv', index=False)
+    sortedExcel = combined_csv.sort_values(by=['RaceDate'])
+    sortedExcel.to_csv('d:\\Statistika2026.csv', index=False)
 
 
 def checkForParameters(value, column):
@@ -76,6 +76,8 @@ if __name__ == '__main__':
     conObj = DbConnection('mssql')
     conObj.createConnection("AUTOCOMMIT")
     con = conObj.connection
+    conObj.executeQuery('exec update_turf_historical_results')
+
     System_file = pd.read_excel('Sistemi_sablon.xlsx').fillna(0)
     for ind in System_file.index:
         where_clause = 'where 1=1 '

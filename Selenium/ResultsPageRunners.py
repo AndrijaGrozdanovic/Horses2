@@ -151,7 +151,7 @@ class ResultsPageRuners(Table):
 
             jockey_html = row.select_one('span[data-prefix="J:"]')
             try:
-                self.jockey = jockey_html.text.split('\n')[2].strip()
+                self.jockey = jockey_html.text.split('\n')[2].strip().replace("'", "")
             except IndexError:
                 pass
             # jockeyClaim
@@ -170,7 +170,7 @@ class ResultsPageRuners(Table):
             trainer_html = row.select_one('span[data-prefix="T:"]')
 
             try:
-                self.trainer = trainer_html.text.split('\n')[2].strip()
+                self.trainer = trainer_html.text.split('\n')[2].strip().replace("'", "")
             except IndexError:
                 pass
 
